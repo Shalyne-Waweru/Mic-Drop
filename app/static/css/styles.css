@@ -310,3 +310,43 @@ body {
 .white-txt {
   color: white;
 }
+
+/* Footer Section */
+.footer {
+  height: 130px;
+  background-color: black;
+}
+
+.fa {
+  margin-top: 20px;
+  font-size: 30px;
+  width: 30px;
+  text-align: center;
+  text-decoration: none;
+  margin-left: 30px;
+  color: white;
+}
+
+.fa:hover {
+    color: #8E8C8D;
+    text-decoration: none;
+}
+
+.social {
+  display: flex;
+  justify-content: center;
+  margin-right: 30px;
+}
+
+.footer hr{
+  height: 2px;
+  width: 15%;
+  margin-left: 42%;
+  color: white;
+}
+
+.footer p {
+  color: white;
+  text-align: center;
+  font-size: 18px;
+}
