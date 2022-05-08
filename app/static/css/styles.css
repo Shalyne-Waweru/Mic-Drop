@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Charm&display=swap');
+
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+/* Navbar Section */
+.navbar {
+  height: 150px;
+  background-color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: 130px;
+}
+
+.logo img {
+  width: 80px;
+  height: 80px;
+}
+
+.logo p {
+  font-family: 'Charm', cursive;
+  font-weight: bold;
+  color: white;
+  margin-left: 20px;
+}
+
+.navbar ul {
+  list-style: none;
+  font-family: 'Charm', cursive;
+}
+
+.navbar ul li{
+  display: inline-block;
+}
+
+.navbar ul li a {
+  text-decoration: none;
+  color: white;
+  margin-left: 20px;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.active {
+  border: 2px solid #C4C4C4;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.login-btn {
+  margin-right: 130px;
+  border: none;
+  padding: 10px;
+  background-color: #C4C4C4;
+  border-radius: 5px;
+}
+
+.login-btn a {
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.login-btn a:visited {
+  color: black;
+  text-decoration: none;
+}
+
+.login-btn:hover {
+  background-color: white;
+}
+
+.login-btn:hover a {
+  color: black;
+  font-weight: bold;
+}
