@@ -220,9 +220,10 @@ body {
   font-size: 20px;
   font-weight: bold;
   color: white;
+  cursor: pointer;
 }
 
-.pickup-hover {
+.pickup-hover a {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -231,8 +232,10 @@ body {
   font-weight: bold;
   background-color: black;
   color: white;
+  text-decoration: none;
   font-size: 22px;
   font-family: 'Charm', cursive;
+  cursor: pointer;
 }
 
 .interview {
@@ -349,4 +352,148 @@ body {
   color: white;
   text-align: center;
   font-size: 18px;
+}
+
+/* Pickup Lines Page Styles */
+
+/* Intro Section */
+.nav-img {
+  height: 400px;
+}
+
+.nav-img h2 {
+  text-align: center;
+  color: white;
+  font-weight: bold;
+}
+
+.nav-img hr {
+  height: 1px;
+  width: 180px;
+  background-color: white;
+  margin-top: -10px;
+}
+
+.nav-img img {
+  position: absolute;
+  width: 186vh;
+  height: 400px;
+  z-index: -1;
+  margin-top: -210px;
+}
+
+.nav-img .section-header {
+  margin-top: 200px;
+}
+
+.nav-img .section-header .horizontal {
+  margin-top: 70px;
+  width: 15px;
+}
+
+/* All Pickup Lines Section */
+.all-pickup-lines {
+  height: 50vh;
+  background-color: black;
+  margin-bottom: 70px;
+}
+
+.all-pickup-lines .container {
+  max-width: 75% !important;
+  margin-top: -20px;
+}
+
+.all-pickup-lines .col-md-3 {
+  height: 100%;
+  background-color: #C4C4C4;
+  text-align: center;
+  padding: 0px 20px;
+  border-radius: 0px 70px 10px 10px;
+  color: black;
+  font-weight: 400;
+  margin-left: 30px;
+  margin-bottom: 50px;
+}
+
+.all-pickup-lines .col-md-3 .p-line {
+  margin-top: 70px;
+}
+
+.all-pickup-lines .col-md-3 hr {
+  width: 80px;
+  height: 2px;
+  background-color: black;
+}
+
+.votes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20px;
+  margin-top: -20px;
+}
+
+.upvote, .downvote {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+}
+
+.upvote p, .downvote p {
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.upvote .fa, .downvote .fa {
+  color: black;
+  margin-right: 10px;
+}
+
+.comment-btn p {
+  width: 341px;
+  margin-top: 20px;
+  background-color: white;
+  padding: 15px;
+  margin-bottom: 0px;
+  margin-left: -19px;
+  border-radius: 0px 0px 10px 10px;
+  font-weight: bold;
+}
+
+/* New Pickup Line Section */
+.form-section {
+  height: 600px;
+  background-color: white;
+}
+
+.form-section .container {
+  background-color: #C4C4C4;
+  max-width: 45% !important;
+  height: 330px;
+  border-radius: 5px;
+}
+
+.form-section .container p {
+  padding-top: 50px;
+  text-decoration: underline;
+  font-weight: bold;
+  text-align: center;
+}
+
+.form {
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: 500;
+}
+
+.submit-btn {
+  background-color: black;
+  color: white;
+  font-weight: bold;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
 }

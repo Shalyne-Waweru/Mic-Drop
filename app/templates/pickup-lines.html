@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+  <!-- Intro Section -->
+  <div class="nav-img">
+    <h2>PICKUP LINES</h2>
+    <hr>
+    <img src="../static/images/category-image-2.jpg">
+
+    <div class="section-header">
+      <hr class="horizontal">
+      <h2>All Pickup Lines</h2>
+      <hr class="horizontal">
+    </div>
+  </div>
+
+  <!-- All Pickup Lines Section -->
+  <div class="all-pickup-lines">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3">
+          <p class="p-line">Lorem ipsum dolor sit amet. 33 impedit dolorem aut enim molestiae et sint nobis est sunt quis id ipsum fugit. Ut quibusdam quae!</p>
+          <hr>
+          <h4>Author</h4>
+          <p>Date: <strong>8/4/2022</strong></p>
+          <div class="votes">
+            <div class="upvote">
+              <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+              <p>0</p>
+            </div>
+            <div class="downvote">
+              <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+              <p>0</p>
+            </div>
+          </div>
+          <div class="comment-btn">
+            <p>ADD COMMENT</p>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <p class="p-line">Lorem ipsum dolor sit amet. 33 impedit dolorem aut enim molestiae et sint nobis est sunt quis id ipsum fugit. Ut quibusdam quae!</p>
+          <hr>
+          <h4>Author</h4>
+          <p>Date: <strong>8/4/2022</strong></p>
+          <div class="votes">
+            <div class="upvote">
+              <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+              <p>0</p>
+            </div>
+            <div class="downvote">
+              <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+              <p>0</p>
+            </div>
+          </div>
+          <div class="comment-btn">
+            <p>ADD COMMENT</p>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <p class="p-line">Lorem ipsum dolor sit amet. 33 impedit dolorem aut enim molestiae et sint nobis est sunt quis id ipsum fugit. Ut quibusdam quae!</p>
+          <hr>
+          <h4>Author</h4>
+          <p>Date: <strong>8/4/2022</strong></p>
+          <div class="votes">
+            <div class="upvote">
+              <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+              <p>0</p>
+            </div>
+            <div class="downvote">
+              <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+              <p>0</p>
+            </div>
+          </div>
+          <div class="comment-btn">
+            <p>ADD COMMENT</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   <!-- New Pickup Line Section -->
+   <div class="form-section">
+    <div class="section-header">
+      <hr class="horizontal">
+      <h2>New Pickup Line</h2>
+      <hr class="horizontal">
+    </div>
+
+    <div class="container">
+      <p>FILL IN THE FORM BELOW</p>
+
+      <div class="form">
+        <!-- {{ wtf.quick_form(pickup_line_form) }} -->
+        {{wtf.form_field(pickup_line_form.pickupLine)}}
+        <input class = "submit-btn" type="submit" value="SUBMIT">
+      </div>
+      
+
+    </div>
+
+   </div>
+{% endblock %}
