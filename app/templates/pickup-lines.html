@@ -19,65 +19,33 @@
   <div class="all-pickup-lines">
     <div class="container">
       <div class="row">
-        <div class="col-md-3">
-          <p class="p-line">Lorem ipsum dolor sit amet. 33 impedit dolorem aut enim molestiae et sint nobis est sunt quis id ipsum fugit. Ut quibusdam quae!</p>
-          <hr>
-          <h4>Author</h4>
-          <p>Date: <strong>8/4/2022</strong></p>
-          <div class="votes">
-            <div class="upvote">
-              <i class="fa fa-thumbs-up" aria-hidden="true"></i>
-              <p>0</p>
+        {% if pickup_lines %}
+          {% for line in pickup_lines %}
+            <div class="col-md-3">
+              <p class="p-line">{{line.pickupLine}}</p>
+              <hr>
+              <h4>Author</h4>
+              <p>Date: <strong>8/4/2022</strong></p>
+              <div class="votes">
+                <div class="upvote">
+                  <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                  <p>0</p>
+                </div>
+                <div class="downvote">
+                  <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+                  <p>0</p>
+                </div>
+              </div>
+              <div class="comment-btn">
+                <p>ADD COMMENT</p>
+              </div>
             </div>
-            <div class="downvote">
-              <i class="fa fa-thumbs-down" aria-hidden="true"></i>
-              <p>0</p>
-            </div>
-          </div>
-          <div class="comment-btn">
-            <p>ADD COMMENT</p>
-          </div>
-        </div>
+          {% endfor %}
 
-        <div class="col-md-3">
-          <p class="p-line">Lorem ipsum dolor sit amet. 33 impedit dolorem aut enim molestiae et sint nobis est sunt quis id ipsum fugit. Ut quibusdam quae!</p>
-          <hr>
-          <h4>Author</h4>
-          <p>Date: <strong>8/4/2022</strong></p>
-          <div class="votes">
-            <div class="upvote">
-              <i class="fa fa-thumbs-up" aria-hidden="true"></i>
-              <p>0</p>
-            </div>
-            <div class="downvote">
-              <i class="fa fa-thumbs-down" aria-hidden="true"></i>
-              <p>0</p>
-            </div>
-          </div>
-          <div class="comment-btn">
-            <p>ADD COMMENT</p>
-          </div>
-        </div>
+        {% else %}
+          <h3 class="default">There are No Pickup Lines Yet</h3>
 
-        <div class="col-md-3">
-          <p class="p-line">Lorem ipsum dolor sit amet. 33 impedit dolorem aut enim molestiae et sint nobis est sunt quis id ipsum fugit. Ut quibusdam quae!</p>
-          <hr>
-          <h4>Author</h4>
-          <p>Date: <strong>8/4/2022</strong></p>
-          <div class="votes">
-            <div class="upvote">
-              <i class="fa fa-thumbs-up" aria-hidden="true"></i>
-              <p>0</p>
-            </div>
-            <div class="downvote">
-              <i class="fa fa-thumbs-down" aria-hidden="true"></i>
-              <p>0</p>
-            </div>
-          </div>
-          <div class="comment-btn">
-            <p>ADD COMMENT</p>
-          </div>
-        </div>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -94,12 +62,9 @@
       <p>FILL IN THE FORM BELOW</p>
 
       <div class="form">
-        <!-- {{ wtf.quick_form(pickup_line_form) }} -->
-        {{wtf.form_field(pickup_line_form.pickupLine)}}
-        <input class = "submit-btn" type="submit" value="SUBMIT">
+        {{ wtf.quick_form(pickup_line_form) }}
       </div>
       
-
     </div>
 
    </div>
