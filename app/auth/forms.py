@@ -9,7 +9,8 @@ class RegistrationForm(FlaskForm):
     username = StringField('Enter Username',validators = [DataRequired()])
     password = PasswordField('Enter Password',validators = [DataRequired(), EqualTo('password_confirm',message = 'Passwords must match')])
     confirm_password = PasswordField('Confirm Password',validators = [DataRequired()])
-    submit = SubmitField('SIGN UP')
+    style={ 'style': 'background-color: black; color: white; width:430px; margin-top: 20px; '}
+    submit = SubmitField('SIGN UP',render_kw=style)
 
     #Custom validators
     def validate_email(self,data_field):

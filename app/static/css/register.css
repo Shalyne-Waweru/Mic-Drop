@@ -1,7 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Charm&display=swap');
+
 body {
   background-image: url(../images/auth-background.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   position: absolute;
   z-index: -1;
+  opacity: 0.8;
+}
+
+.container {
+  background-color: #C4C4C4;
+  border-radius: 5px;
+  margin-left: 65vh;
+  margin-right: 65vh;
+  margin-top: 20vh;
+  width: 530px;
+  padding: 50px;
+}
+
+.container h2 {
+  font-family: 'Charm', cursive;
+  font-weight: bold;
+  margin-bottom: 50px;
+}
+
+.container p {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.container p a {
+  color: black;
+  text-decoration: none;
+}
+
+.container p a:visited {
+  color: black;
+  text-decoration: none;
 }
