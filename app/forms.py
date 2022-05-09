@@ -19,3 +19,9 @@ class PromotionForm(FlaskForm):
     promotion = TextAreaField('Promotion Pitch', validators=[DataRequired()])
     style={ 'style': 'background-color: black; color: white; '}
     submit = SubmitField('SUBMIT',render_kw=style)
+
+class CommentForm(FlaskForm):
+
+    comment = TextAreaField('Comment', validators=[DataRequired()])
+    style={ 'style': 'background-color: black; color: white; '}
+    submit = SubmitField('SUBMIT',render_kw=style)

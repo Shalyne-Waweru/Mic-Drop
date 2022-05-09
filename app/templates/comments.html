@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+  <!-- Intro Section -->
+  <div class="nav-img">
+    <h2>COMMENTS SECTION</h2>
+    <hr>
+    <img src="../static/images/category-image-2.jpg">
+
+    <div class="section-header">
+      <hr class="horizontal">
+      <h2>All Comments</h2>
+      <hr class="horizontal">
+    </div>
+  </div>
+
+  <!-- Add Comments Section -->
+  <div class="all-pickup-lines">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 left">
+          <p class="p-line">Lorem ipsum dolor sit amet. 33 
+            impedit dolorem aut enim molestiae
+              et sint nobis est sunt quis id ipsum 
+            fugit. Ut quibusdam quae!</p>
+          <hr>
+          <h4>Author</h4>
+          <p>Date: <strong>8/4/2022</strong></p>
+          <div class="votes">
+            <div class="upvote">
+              <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+              <p>0</p>
+            </div>
+            <div class="downvote">
+              <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+              <p>0</p>
+            </div>
+          </div>
+        </div>
+      
+        <!-- Comment Form Section -->
+        <div class="col-md-5">
+          <p>ADD A COMMENT BELOW</p>
+    
+          <div class="form">
+            {{ wtf.quick_form(comments_form) }}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+   <!-- All Comments Section -->
+  <div class="comments-section">
+    <div class="section-header">
+      <hr class="horizontal">
+      <h2>All Comments</h2>
+      <hr class="horizontal">
+    </div>
+
+    <div class="all-comments">
+      <div class="container">
+        <div class="row">
+          {% if all_comments %}
+            {% for com in all_comments %}
+              <div class="col-md-5">
+                <h5>Comment From: </h5>
+                <p><strong>Comment:</strong> {{com.comment}}</p>  
+                <hr>
+                <h6><strong>Published Date:</strong> 8/4/2022</h6>
+              </div>
+            {% endfor %}
+
+          {% else %}
+            <h3 class="comments-default">There are No Comments Yet</h3>
+    
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+{% endblock %}

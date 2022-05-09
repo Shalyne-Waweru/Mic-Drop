@@ -1,11 +1,12 @@
 from flask import render_template,redirect,url_for
 from app import app
-from .models import pickup_lines,interview,promotion
-from .forms import PickupLineForm, InterviewForm, PromotionForm
+from .models import pickup_lines,interview,promotion,comments
+from .forms import PickupLineForm, InterviewForm, PromotionForm, CommentForm
 
 Pickup = pickup_lines.Pickup
 Interview = interview.Interview
 Promotion = promotion.Promotion
+Comments = comments.Comments
 
 # LANDING PAGE
 @app.route('/')
@@ -93,3 +94,26 @@ def promotion():
     promotion_pitches = Promotion.get_promotions()
 
     return render_template('promotion-pitches.html', promotion_form = promotion_form, promotion_pitches = promotion_pitches)
+
+# COMMENTS PAGE
+@app.route('/comments', methods = ['GET','POST'])
+def comments():
+
+    #Create an instance of the CommentForm class and name it comments_form
+    comments_form = CommentForm()
+
+    #The method returns True when the form is submitted and all the data has been verified by the validators
+    if comments_form.validate_on_submit():
+        #If True we gather the data from the form input fields
+        comment = comments_form.comment.data
+
+        #Create a new comment object and save it
+        new_comment = Comments(comment)
+        new_comment.save_comment()
+
+        return redirect(url_for('comments'))
+
+    #Get all the Comments
+    all_comments = Comments.get_comments()
+
+    return render_template('comments.html', comments_form = comments_form, all_comments = all_comments)

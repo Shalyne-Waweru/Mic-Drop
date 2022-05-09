@@ -498,3 +498,86 @@ body {
   margin-right: auto;
   font-weight: 500;
 }
+
+/* Comments Page Styles */
+
+/* Add Comments Section */
+.all-pickup-lines .left {
+  height: 100%;
+  background-color: #C4C4C4;
+  text-align: center;
+  padding: 0px 20px;
+  border-radius: 0px 70px 10px 10px;
+  color: black;
+  font-weight: 400;
+  margin-left: 30px;
+  margin-bottom: 50px;
+}
+
+.all-pickup-lines .col-md-5 {
+  background-color: #C4C4C4;
+  padding-bottom: 50px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.all-pickup-lines .col-md-5 p {
+  padding-top: 50px;
+  text-decoration: underline;
+  font-weight: bold;
+  text-align: center;
+}
+
+.all-pickup-lines .col-md-5 .form {
+  width: 400px;
+  font-weight: 500;
+}
+
+/* View Comments Section */
+.comments-section {
+  height: 100%;
+  background-color: white;
+  margin-bottom: 0px;
+}
+
+.all-comments {
+  height: 100%;
+}
+
+.all-comments .container {
+  max-width: 75% !important;
+}
+
+.all-comments .col-md-5 {
+  background-color: #C4C4C4;
+  height: 200px;
+  margin-bottom: 50px;
+  padding: 0px;
+  border-radius: 5px;
+}
+
+.all-comments .col-md-5 h5 {
+  color: white;
+  background-color: black;
+  padding: 20px;
+}
+
+.all-comments .col-md-5 p {
+  margin-left: 20px;
+  margin-top: 20px;
+}
+
+.all-comments .col-md-5 hr {
+  height: 1px;
+  background-color: black;
+  margin-top: 40px;
+}
+
+.all-comments .col-md-5 h6 {
+  margin-left: 20px;
+}
+
+.comments-default {
+  color: black;
+  font-weight: bold;
+}
