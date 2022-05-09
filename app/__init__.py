@@ -24,4 +24,9 @@ def create_app(config_name):
   from .main import main as main_blueprint
   app.register_blueprint(main_blueprint)
 
+  # Registering the auth blueprint
+  from .auth import auth as auth_blueprint
+  # The url_prefix argument will add a prefix to all the routes registered with that blueprint Eg:-localhost:5000/authenticate/login
+  app.register_blueprint(auth_blueprint,url_prefix = '/authenticate')
+
   return app
