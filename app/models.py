@@ -1,7 +1,21 @@
 from . import db
 from werkzeug.security import generate_password_hash,check_password_hash
 
-class User(db.Model):
+# The UserMixin class implements 4 methods:-
+# 1. is_authenticated() - Returns a boolean if a User is authenticated or not.,
+# 2. is_active()- Checks if a user is allowed to authenticate,
+# 3. is_anonymous()- Returns a boolean if a user is anonymous.
+# 4. get_id()- Returns a unique identifier for User.
+
+from flask_login import UserMixin
+from . import login_manager
+
+#Callback function that retrieves a user when a unique identifier is passed.
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer,primary_key = True)
     emails = db.Column(db.String(255),unique = True,index = True)

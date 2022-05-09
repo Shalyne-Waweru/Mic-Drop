@@ -2,6 +2,7 @@ from flask import render_template,redirect,url_for
 from . import main
 from ..models import Pickup,Interview,Promotion,Comments
 from .forms import PickupLineForm, InterviewForm, PromotionForm, CommentForm
+from flask_login import login_required
 
 # LANDING PAGE
 @main.route('/')
@@ -92,6 +93,7 @@ def promotion():
 
 # COMMENTS PAGE
 @main.route('/comments', methods = ['GET','POST'])
+@login_required
 def comments():
 
     #Create an instance of the CommentForm class and name it comments_form
