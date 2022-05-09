@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+  <!-- Intro Section -->
+  <div class="nav-img">
+    <h2>PROMOTION PITCHES</h2>
+    <hr>
+    <img src="../static/images/category-image-7.jpg">
+
+    <div class="section-header">
+      <hr class="horizontal">
+      <h2>All Promotion Pitches</h2>
+      <hr class="horizontal">
+    </div>
+  </div>
+
+  <!-- All Promotion Pitches Section -->
+  <div class="all-pickup-lines">
+    <div class="container">
+      <div class="row">
+        {% if promotion_pitches %}
+          {% for promotion_pitch in promotion_pitches %}
+            <div class="col-md-3">
+              <p class="p-line">{{promotion_pitch.promotion}}</p>
+              <hr>
+              <h4>Author</h4>
+              <p>Date: <strong>8/4/2022</strong></p>
+              <div class="votes">
+                <div class="upvote">
+                  <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                  <p>0</p>
+                </div>
+                <div class="downvote">
+                  <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+                  <p>0</p>
+                </div>
+              </div>
+              <div class="comment-btn">
+                <p>ADD COMMENT</p>
+              </div>
+            </div>
+          {% endfor %}
+
+        {% else %}
+          <h3 class="default">There are No Promotion Pitches Yet</h3>
+
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+   <!-- New Promotion Pitch Section -->
+   <div class="form-section">
+    <div class="section-header">
+      <hr class="horizontal">
+      <h2>New Promotion Pitch</h2>
+      <hr class="horizontal">
+    </div>
+
+    <div class="container">
+      <p>FILL IN THE FORM BELOW</p>
+
+      <div class="form">
+        {{ wtf.quick_form(promotion_form) }}
+      </div>
+      
+    </div>
+
+   </div>
+{% endblock %}

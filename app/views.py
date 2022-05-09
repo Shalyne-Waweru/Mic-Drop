@@ -1,10 +1,11 @@
 from flask import render_template,redirect,url_for
 from app import app
-from .models import pickup_lines,interview
-from .forms import PickupLineForm, InterviewForm
+from .models import pickup_lines,interview,promotion
+from .forms import PickupLineForm, InterviewForm, PromotionForm
 
 Pickup = pickup_lines.Pickup
 Interview = interview.Interview
+Promotion = promotion.Promotion
 
 # LANDING PAGE
 @app.route('/')
@@ -66,3 +67,29 @@ def interview():
     interview_pitches = Interview.get_interviews()
 
     return render_template('interview-pitches.html', interview_form = interview_form, interview_pitches = interview_pitches)
+
+# PROMOTION PITCHES PAGE
+@app.route('/promotion', methods = ['GET','POST'])
+def promotion():
+    '''
+    View root page function that returns the promotion pitches page and its data
+    '''
+
+    #Create an instance of the PromotionForm class and name it promotion_form
+    promotion_form = PromotionForm()
+
+    #The method returns True when the form is submitted and all the data has been verified by the validators
+    if promotion_form.validate_on_submit():
+        #If True we gather the data from the form input fields
+        promotion = promotion_form.promotion.data
+
+        #Create a new promotion object and save it
+        new_promotion = Promotion(promotion)
+        new_promotion.save_promotion()
+
+        return redirect(url_for('promotion'))
+
+    #Get all the Promotion Pitches
+    promotion_pitches = Promotion.get_promotions()
+
+    return render_template('promotion-pitches.html', promotion_form = promotion_form, promotion_pitches = promotion_pitches)
