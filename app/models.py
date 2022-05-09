@@ -1,11 +1,28 @@
 from . import db
+from werkzeug.security import generate_password_hash,check_password_hash
 
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer,primary_key = True)
-    email = db.Column(db.String(255),unique = True,index = True)
-    username = db.Column(db.String(255),unique = True,index = True)
-    password = db.Column(db.String(255))
+    emails = db.Column(db.String(255),unique = True,index = True)
+    usernames = db.Column(db.String(255),unique = True,index = True)
+    password_hashes = db.Column(db.String(255))
+ 
+    #Create a write only class property password
+    @property
+    def password(self):
+        #Block access to the password property
+        raise AttributeError('You cannot read the password attribute')
+
+    #Generate a password hash and pass it to the password_hashes column property to save to the database.
+    @password.setter
+    def password(self, password):
+        self.password_hashes = generate_password_hash(password)
+
+    #Create a method verify_password that takes in a password
+    #It hashes it and compares it to the hashed password to check if they are the same.
+    def verify_password(self,password):
+        return check_password_hash(self.password_hashes,password)
 
     def __repr__(self):
         return f'User {self.username}'
