@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+  <!-- Intro Section -->
+  <div class="nav-img">
+    <h2>INTERVIEW PITCHES</h2>
+    <hr>
+    <img src="../static/images/category-image-1.jpg">
+
+    <div class="section-header">
+      <hr class="horizontal">
+      <h2>All Interview Pitches</h2>
+      <hr class="horizontal">
+    </div>
+  </div>
+
+  <!-- All Interview Pitches Section -->
+  <div class="all-pickup-lines">
+    <div class="container">
+      <div class="row">
+        {% if interview_pitches %}
+          {% for interview_pitch in interview_pitches %}
+            <div class="col-md-3">
+              <p class="p-line">{{interview_pitch.interview}}</p>
+              <hr>
+              <h4>Author</h4>
+              <p>Date: <strong>8/4/2022</strong></p>
+              <div class="votes">
+                <div class="upvote">
+                  <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                  <p>0</p>
+                </div>
+                <div class="downvote">
+                  <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+                  <p>0</p>
+                </div>
+              </div>
+              <div class="comment-btn">
+                <p>ADD COMMENT</p>
+              </div>
+            </div>
+          {% endfor %}
+
+        {% else %}
+          <h3 class="default">There are No Interview Pitches Yet</h3>
+
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+   <!-- New Interview Pitch Section -->
+   <div class="form-section">
+    <div class="section-header">
+      <hr class="horizontal">
+      <h2>New Interview Pitch</h2>
+      <hr class="horizontal">
+    </div>
+
+    <div class="container">
+      <p>FILL IN THE FORM BELOW</p>
+
+      <div class="form">
+        {{ wtf.quick_form(interview_form) }}
+        <!-- {{ wtf.form_field(interview_form.interview) }}
+        {{ wtf.form_field(interview_form.submit) }} -->
+        <!-- <button type=submit class="btn btn-primary"><span class="oi oi-check" title="Submit">SUBMIT</span></button> -->
+      </div>
+      
+    </div>
+
+   </div>
+{% endblock %}
