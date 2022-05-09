@@ -5,8 +5,8 @@ from ..models import User
 from wtforms import ValidationError
 
 class RegistrationForm(FlaskForm):
-    email = StringField('Enter Email Address',validators=[DataRequired(),Email()])
-    username = StringField('Enter Username',validators = [DataRequired()])
+    emails = StringField('Enter Email Address',validators=[DataRequired(),Email()])
+    usernames = StringField('Enter Username',validators = [DataRequired()])
     password = PasswordField('Enter Password',validators = [DataRequired(), EqualTo('password_confirm',message = 'Passwords must match')])
     confirm_password = PasswordField('Confirm Password',validators = [DataRequired()])
     style={ 'style': 'background-color: black; color: white; width:430px; margin-top: 20px; '}
@@ -22,7 +22,11 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('That username is taken')
 
 class LoginForm(FlaskForm):
-    email = StringField('Email Address',validators=[DataRequired(),Email()])
+    emails = StringField('Email Address',validators=[DataRequired(),Email()])
     password = PasswordField('Password',validators =[DataRequired()])
-    remember = BooleanField('Remember me?')
-    submit = SubmitField('LOGIN')
+
+    checkbox_style={ 'style': 'width:15px; height:15px;'}
+    remember = BooleanField('Remember me?',render_kw=checkbox_style)
+
+    style={ 'style': 'background-color: black; color: white; width:430px; margin-top: 20px; '}
+    submit = SubmitField('LOGIN',render_kw=style)
