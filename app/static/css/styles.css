@@ -57,6 +57,12 @@ body {
   padding: 5px;
 }
 
+.username {
+  color: white;
+  border: 1px solid #C4C4C4;
+  padding: 10px;
+}
+
 .login-btn {
   border: none;
   padding: 10px;

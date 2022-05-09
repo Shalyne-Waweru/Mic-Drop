@@ -13,10 +13,10 @@
   </ul>
 
   {% if current_user.is_authenticated %}
-    <li style="color:white;padding:15px;">{{current_user.username}}</li>
+    <h5 class="username">HELLO {{current_user.usernames}}</h5>
     <button class="login-btn"><a href="{{ url_for('auth.logout') }}">LOGOUT</a></button>
   {% else %}
     <button class="login-btn"><a href="{{ url_for('auth.login') }}">LOGIN</a></button>
   {% endif %}
-  
+
 </header>
