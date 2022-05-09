@@ -1,15 +1,10 @@
 from flask import render_template,redirect,url_for
-from app import app
-from .models import pickup_lines,interview,promotion,comments
+from . import main
+from ..models import Pickup,Interview,Promotion,Comments
 from .forms import PickupLineForm, InterviewForm, PromotionForm, CommentForm
 
-Pickup = pickup_lines.Pickup
-Interview = interview.Interview
-Promotion = promotion.Promotion
-Comments = comments.Comments
-
 # LANDING PAGE
-@app.route('/')
+@main.route('/')
 def index():
 
     '''
@@ -18,7 +13,7 @@ def index():
     return render_template('index.html')
 
 # PICKUP LINES PAGE
-@app.route('/pickup-lines', methods = ['GET','POST'])
+@main.route('/pickup-lines', methods = ['GET','POST'])
 def pickup():
     '''
     View root page function that returns the pickup lines page and its data
@@ -36,7 +31,7 @@ def pickup():
         new_pickup_line = Pickup(pickupLine)
         new_pickup_line.save_pickup_line()
 
-        return redirect(url_for('pickup'))
+        return redirect(url_for('main.pickup'))
 
     #Get all the Pickup Lines
     pickup_lines = Pickup.get_pickup_lines()
@@ -44,7 +39,7 @@ def pickup():
     return render_template('pickup-lines.html', pickup_line_form = pickup_line_form, pickup_lines = pickup_lines)
 
 # INTERVIEW PITCHES PAGE
-@app.route('/interview', methods = ['GET','POST'])
+@main.route('/interview', methods = ['GET','POST'])
 def interview():
     '''
     View root page function that returns the interview pitches page and its data
@@ -62,7 +57,7 @@ def interview():
         new_interview = Interview(interview)
         new_interview.save_interview()
 
-        return redirect(url_for('interview'))
+        return redirect(url_for('main.interview'))
 
     #Get all the Interview Pitches
     interview_pitches = Interview.get_interviews()
@@ -70,7 +65,7 @@ def interview():
     return render_template('interview-pitches.html', interview_form = interview_form, interview_pitches = interview_pitches)
 
 # PROMOTION PITCHES PAGE
-@app.route('/promotion', methods = ['GET','POST'])
+@main.route('/promotion', methods = ['GET','POST'])
 def promotion():
     '''
     View root page function that returns the promotion pitches page and its data
@@ -88,7 +83,7 @@ def promotion():
         new_promotion = Promotion(promotion)
         new_promotion.save_promotion()
 
-        return redirect(url_for('promotion'))
+        return redirect(url_for('main.promotion'))
 
     #Get all the Promotion Pitches
     promotion_pitches = Promotion.get_promotions()
@@ -96,7 +91,7 @@ def promotion():
     return render_template('promotion-pitches.html', promotion_form = promotion_form, promotion_pitches = promotion_pitches)
 
 # COMMENTS PAGE
-@app.route('/comments', methods = ['GET','POST'])
+@main.route('/comments', methods = ['GET','POST'])
 def comments():
 
     #Create an instance of the CommentForm class and name it comments_form
@@ -111,7 +106,7 @@ def comments():
         new_comment = Comments(comment)
         new_comment.save_comment()
 
-        return redirect(url_for('comments'))
+        return redirect(url_for('main.comments'))
 
     #Get all the Comments
     all_comments = Comments.get_comments()
