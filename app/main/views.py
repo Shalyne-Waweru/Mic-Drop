@@ -3,7 +3,7 @@ import flask_login
 from . import main
 from ..models import Pickup,Interview,Promotion,Comments, User
 from .forms import PickupLineForm, InterviewForm, PromotionForm, CommentForm
-from flask_login import login_required
+from flask_login import current_user, login_required
 
 # LANDING PAGE
 @main.route('/')
@@ -44,6 +44,7 @@ def pickup():
 
 # INTERVIEW PITCHES PAGE
 @main.route('/interview', methods = ['GET','POST'])
+@login_required
 def interview():
     '''
     View root page function that returns the interview pitches page and its data
@@ -58,8 +59,9 @@ def interview():
         interview = interview_form.interview.data
 
         #Create a new interview object and save it
-        new_interview = Interview(interview)
+        new_interview = Interview(interview = interview)
         new_interview.save_interview()
+        flask_login.current_user.addInterview(new_interview)
 
         return redirect(url_for('main.interview'))
 

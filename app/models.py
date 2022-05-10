@@ -25,6 +25,11 @@ class User(UserMixin, db.Model):
 
     #Define the relationship with the Pickup model.
     pickupLines = db.relationship('Pickup',backref = 'user',lazy = "dynamic")
+    #Define the relationship with the Interview model.
+    interviews = db.relationship('Interview',backref = 'user',lazy = "dynamic")
+
+    # #Define the relationship with the Comments model.
+    # comments = db.relationship('Comments', backref='user', lazy='dynamic')
 
     #Create a write only class property password
     @property
@@ -47,6 +52,11 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def addInterview(self,interviewPitch):
+        self.interviews.append(interviewPitch)
+        db.session.add(self)
+        db.session.commit()
+
     def __repr__(self):
         return f'User {self.usernames}'
 
@@ -59,6 +69,8 @@ class Pickup(db.Model):
     postedDate = db.Column(db.DateTime,default=datetime.now)
     #Create Foreign key column where we store the id of the user who wrote the pickup line
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+    # #Define the relationship with the Comments Model.
+    # pline_comments = db.relationship('Comments',backref = 'plinecomments',lazy = "dynamic")
 
     def save_pickup_line(self):
         db.session.add(self)
@@ -69,60 +81,52 @@ class Pickup(db.Model):
     def get_pickup_lines(cls):
         pickupLines = Pickup.query.all()
         return pickupLines
-        
-    # all_pickup_lines = []
 
-    # def __init__(self,pickupLine):
-    #     self.pickupLine = pickupLine
+class Interview(db.Model):
 
+    __tablename__ = 'interviews'
 
-    #Appends the pickupLine object to a class variable all_pickup_lines that is an empty list. 
-    # def save_pickup_line(self):
-    #     Pickup.all_pickup_lines.append(self)
+    id = db.Column(db.Integer,primary_key = True)
+    interview = db.Column(db.String)
+    postedDate = db.Column(db.DateTime,default=datetime.now)
+    #Create Foreign key column where we store the id of the user who wrote the interview pitch
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
 
-    #Clears all the Items from the list
-    # @classmethod
-    # def clear_pickup_lines(cls):
-    #     Pickup.all_pickup_lines.clear()
+    def save_interview(self):
+        db.session.add(self)
+        db.session.commit()
+        return self
 
-    #Get all the Pickup Lines
-    # @classmethod
-    # def get_pickup_lines(cls):
+    @classmethod
+    def get_interviews(cls):
+        interviews = Interview.query.all()
+        return interviews
 
-    #     response = []
+    # all_interviews = []
 
-    #     for pLine in cls.all_pickup_lines:
-    #         response.append(pLine)
-
-    #     return response
-
-class Interview:
-
-    all_interviews = []
-
-    def __init__(self,interview):
-        self.interview = interview
+    # def __init__(self,interview):
+    #     self.interview = interview
 
 
     #Appends the interview object to a class variable all_interviews that is an empty list. 
-    def save_interview(self):
-        Interview.all_interviews.append(self)
+    # def save_interview(self):
+    #     Interview.all_interviews.append(self)
 
     #Clears all the Items from the list
-    @classmethod
-    def clear_interviews(cls):
-        Interview.all_interviews.clear()
+    # @classmethod
+    # def clear_interviews(cls):
+    #     Interview.all_interviews.clear()
 
     #Get all the Interviews
-    @classmethod
-    def get_interviews(cls):
+    # @classmethod
+    # def get_interviews(cls):
 
-        response = []
+    #     response = []
 
-        for interview in cls.all_interviews:
-            response.append(interview)
+    #     for interview in cls.all_interviews:
+    #         response.append(interview)
 
-        return response
+    #     return response
 
 class Promotion:
 
@@ -151,13 +155,31 @@ class Promotion:
 
         return response
 
-class Comments:
+class Comments():
+
+    # __tablename__ = 'comments'
+
+    # id = db.Column(db.Integer,primary_key = True)
+    # comment = db.Column(db.String)
+    # postedDate = db.Column(db.DateTime,default=datetime.now)
+    # #Create Foreign key column where we store the id of the Pickup Line to be commented on
+    # pline_post_id = db.Column(db.Integer,db.ForeignKey("pickuplines.id"))
+    # #Create Foreign key column where we store the id of the user that commented on the Pickup Line
+    # user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    
+    # def save_comment(self):
+    #     db.session.add(self)
+    #     db.session.commit()
+
+    # @classmethod
+    # def get_comments(cls,id):
+    #     comments = Comments.query.filter_by(pline_post_id=id).all()
+    #     return comments
 
     all_comments = []
 
     def __init__(self,comment):
         self.comment = comment
-
 
     #Appends the comment object to a class variable all_comments that is an empty list. 
     def save_comment(self):
@@ -175,6 +197,6 @@ class Comments:
         response = []
 
         for comment in cls.all_comments:
-            response.append(comment)
+                response.append(comment)
 
         return response
