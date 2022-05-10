@@ -4,6 +4,7 @@ from .forms import RegistrationForm, LoginForm
 from flask_login import login_user,logout_user,login_required
 from .. import db
 from . import auth
+from ..email import mail_message
 
 #LOGIN PAGE
 @auth.route('/login',methods=['GET','POST'])
@@ -39,6 +40,9 @@ def register():
         db.session.add(user)
         #Commit the session to add the user to our database.
         db.session.commit()
+
+        #We pass in the EMAIL SUBJECT, the TEMPLATE FILE where our message body will be stored and the NEW USER'S EMAIL which we get from the registration form and USER as a keyword argument.
+        mail_message("WELCOME TO MIC DROP","email/welcome",user.emails,user=user)
 
         return redirect(url_for('auth.login'))
 
