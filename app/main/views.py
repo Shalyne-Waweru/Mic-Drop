@@ -1,7 +1,7 @@
 from flask import render_template,redirect,url_for
 import flask_login
 from . import main
-from ..models import Pickup,Interview,Promotion,Comments, User
+from ..models import Pickup,Interview,Promotion,Comments
 from .forms import PickupLineForm, InterviewForm, PromotionForm, CommentForm
 from flask_login import current_user, login_required
 
@@ -33,7 +33,7 @@ def pickup():
         #Create a new pickup_line object and save it
         new_pickup_line = Pickup(pickupLine = pickupLine)
         new_pickup_line.save_pickup_line()
-        flask_login.current_user.add(new_pickup_line)
+        flask_login.current_user.addPickupLine(new_pickup_line)
 
         return redirect(url_for('main.pickup'))
 
@@ -72,6 +72,7 @@ def interview():
 
 # PROMOTION PITCHES PAGE
 @main.route('/promotion', methods = ['GET','POST'])
+@login_required
 def promotion():
     '''
     View root page function that returns the promotion pitches page and its data
@@ -86,8 +87,9 @@ def promotion():
         promotion = promotion_form.promotion.data
 
         #Create a new promotion object and save it
-        new_promotion = Promotion(promotion)
+        new_promotion = Promotion(promotion = promotion)
         new_promotion.save_promotion()
+        flask_login.current_user.addPromotion(new_promotion)
 
         return redirect(url_for('main.promotion'))
 

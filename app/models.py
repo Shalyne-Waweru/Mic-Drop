@@ -27,6 +27,8 @@ class User(UserMixin, db.Model):
     pickupLines = db.relationship('Pickup',backref = 'user',lazy = "dynamic")
     #Define the relationship with the Interview model.
     interviews = db.relationship('Interview',backref = 'user',lazy = "dynamic")
+    #Define the relationship with the Promotion model.
+    promotions = db.relationship('Promotion',backref = 'user',lazy = "dynamic")
 
     # #Define the relationship with the Comments model.
     # comments = db.relationship('Comments', backref='user', lazy='dynamic')
@@ -47,13 +49,19 @@ class User(UserMixin, db.Model):
     def verify_password(self,password):
         return check_password_hash(self.password_hashes,password)
 
-    def add(self,pickupLine):
+    #Functions to append the pitches to their respective relationship columns
+    def addPickupLine(self,pickupLine):
         self.pickupLines.append(pickupLine)
         db.session.add(self)
         db.session.commit()
 
     def addInterview(self,interviewPitch):
         self.interviews.append(interviewPitch)
+        db.session.add(self)
+        db.session.commit()
+
+    def addPromotion(self,promotionPitch):
+        self.promotions.append(promotionPitch)
         db.session.add(self)
         db.session.commit()
 
@@ -102,58 +110,25 @@ class Interview(db.Model):
         interviews = Interview.query.all()
         return interviews
 
-    # all_interviews = []
+class Promotion(db.Model):
 
-    # def __init__(self,interview):
-    #     self.interview = interview
+    __tablename__ = 'promotions'
 
+    id = db.Column(db.Integer,primary_key = True)
+    promotion = db.Column(db.String)
+    postedDate = db.Column(db.DateTime,default=datetime.now)
+    #Create Foreign key column where we store the id of the user who wrote the promotion pitch
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
 
-    #Appends the interview object to a class variable all_interviews that is an empty list. 
-    # def save_interview(self):
-    #     Interview.all_interviews.append(self)
-
-    #Clears all the Items from the list
-    # @classmethod
-    # def clear_interviews(cls):
-    #     Interview.all_interviews.clear()
-
-    #Get all the Interviews
-    # @classmethod
-    # def get_interviews(cls):
-
-    #     response = []
-
-    #     for interview in cls.all_interviews:
-    #         response.append(interview)
-
-    #     return response
-
-class Promotion:
-
-    all_promotions = []
-
-    def __init__(self, promotion):
-        self.promotion = promotion
-
-    #Appends the Promotion object to a class variable all_promotions that is an empty list. 
     def save_promotion(self):
-       Promotion.all_promotions.append(self)
+        db.session.add(self)
+        db.session.commit()
+        return self
 
-    #Clears all the Items from the list
-    @classmethod
-    def clear_promotions(cls):
-       Promotion.all_promotions.clear()
-
-    #Get all the Promotions
     @classmethod
     def get_promotions(cls):
-
-        response = []
-
-        for promotion in cls.all_promotions:
-            response.append(promotion)
-
-        return response
+        promotions = Promotion.query.all()
+        return promotions
 
 class Comments():
 

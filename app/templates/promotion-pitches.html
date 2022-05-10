@@ -24,8 +24,8 @@
             <div class="col-md-3">
               <p class="p-line">{{promotion_pitch.promotion}}</p>
               <hr>
-              <h4>Author</h4>
-              <p>Date: <strong>8/4/2022</strong></p>
+              <h4>{{promotion_pitch.user.usernames}}</h4>
+              <p>Date: <strong>{{promotion_pitch.postedDate.strftime('%Y/%m/%d')}}</strong></p>
               <div class="votes">
                 <div class="upvote">
                   <i class="fa fa-thumbs-up" aria-hidden="true"></i>
@@ -37,7 +37,7 @@
                 </div>
               </div>
               <div class="comment-btn">
-                <p>ADD COMMENT</p>
+                <p><a href="{{ url_for('main.comments') }}">ADD COMMENT</a></p>
               </div>
             </div>
           {% endfor %}
