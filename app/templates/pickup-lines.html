@@ -24,8 +24,8 @@
             <div class="col-md-3">
               <p class="p-line">{{line.pickupLine}}</p>
               <hr>
-              <h4>Author</h4>
-              <p>Date: <strong>8/4/2022</strong></p>
+              <h4>{{line.user.usernames}}</h4>
+              <p>Date: <strong>{{line.postedDate.strftime('%Y/%m/%d')}}</strong></p>
               <div class="votes">
                 <div class="upvote">
                   <i class="fa fa-thumbs-up" aria-hidden="true"></i>

@@ -1,6 +1,7 @@
 from flask import render_template,redirect,url_for
+import flask_login
 from . import main
-from ..models import Pickup,Interview,Promotion,Comments
+from ..models import Pickup,Interview,Promotion,Comments, User
 from .forms import PickupLineForm, InterviewForm, PromotionForm, CommentForm
 from flask_login import login_required
 
@@ -15,6 +16,7 @@ def index():
 
 # PICKUP LINES PAGE
 @main.route('/pickup-lines', methods = ['GET','POST'])
+@login_required
 def pickup():
     '''
     View root page function that returns the pickup lines page and its data
@@ -25,12 +27,13 @@ def pickup():
 
     #The method returns True when the form is submitted and all the data has been verified by the validators
     if pickup_line_form.validate_on_submit():
-        #If True we gather the data from the form input fields
+        # If True we gather the data from the form input fields
         pickupLine = pickup_line_form.pickupLine.data
 
         #Create a new pickup_line object and save it
-        new_pickup_line = Pickup(pickupLine)
+        new_pickup_line = Pickup(pickupLine = pickupLine)
         new_pickup_line.save_pickup_line()
+        flask_login.current_user.add(new_pickup_line)
 
         return redirect(url_for('main.pickup'))
 

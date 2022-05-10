@@ -1,5 +1,6 @@
 from . import db
 from werkzeug.security import generate_password_hash,check_password_hash
+from datetime import datetime
 
 # The UserMixin class implements 4 methods:-
 # 1. is_authenticated() - Returns a boolean if a User is authenticated or not.,
@@ -21,7 +22,10 @@ class User(UserMixin, db.Model):
     emails = db.Column(db.String(255),unique = True,index = True)
     usernames = db.Column(db.String(255),unique = True,index = True)
     password_hashes = db.Column(db.String(255))
- 
+
+    #Define the relationship with the Pickup model.
+    pickupLines = db.relationship('Pickup',backref = 'user',lazy = "dynamic")
+
     #Create a write only class property password
     @property
     def password(self):
@@ -38,36 +42,59 @@ class User(UserMixin, db.Model):
     def verify_password(self,password):
         return check_password_hash(self.password_hashes,password)
 
+    def add(self,pickupLine):
+        self.pickupLines.append(pickupLine)
+        db.session.add(self)
+        db.session.commit()
+
     def __repr__(self):
-        return f'User {self.username}'
+        return f'User {self.usernames}'
 
-class Pickup:
+class Pickup(db.Model):
 
-    all_pickup_lines = []
+    __tablename__ = 'pickuplines'
 
-    def __init__(self,pickupLine):
-        self.pickupLine = pickupLine
+    id = db.Column(db.Integer,primary_key = True)
+    pickupLine = db.Column(db.String)
+    postedDate = db.Column(db.DateTime,default=datetime.now)
+    #Create Foreign key column where we store the id of the user who wrote the pickup line
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+
+    def save_pickup_line(self):
+        db.session.add(self)
+        db.session.commit()
+        return self
+
+    @classmethod
+    def get_pickup_lines(cls):
+        pickupLines = Pickup.query.all()
+        return pickupLines
+        
+    # all_pickup_lines = []
+
+    # def __init__(self,pickupLine):
+    #     self.pickupLine = pickupLine
 
 
     #Appends the pickupLine object to a class variable all_pickup_lines that is an empty list. 
-    def save_pickup_line(self):
-        Pickup.all_pickup_lines.append(self)
+    # def save_pickup_line(self):
+    #     Pickup.all_pickup_lines.append(self)
 
     #Clears all the Items from the list
-    @classmethod
-    def clear_pickup_lines(cls):
-        Pickup.all_pickup_lines.clear()
+    # @classmethod
+    # def clear_pickup_lines(cls):
+    #     Pickup.all_pickup_lines.clear()
 
     #Get all the Pickup Lines
-    @classmethod
-    def get_pickup_lines(cls):
+    # @classmethod
+    # def get_pickup_lines(cls):
 
-        response = []
+    #     response = []
 
-        for pLine in cls.all_pickup_lines:
-            response.append(pLine)
+    #     for pLine in cls.all_pickup_lines:
+    #         response.append(pLine)
 
-        return response
+    #     return response
 
 class Interview:
 
