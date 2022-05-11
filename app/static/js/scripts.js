@@ -17,4 +17,14 @@ $(document).ready(function(){
     $(".promotion-hover").toggle();
   });
 
+  $("#like").click(function(){
+    num = parseInt($(".like-num").text());
+    $(".like-num").text(num+=1);
+  });
+
+  $("#dislike").click(function(){
+    num = parseInt($(".dislike-num").text());
+    $(".dislike-num").text(num+=1);
+  });
+
 });
