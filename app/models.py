@@ -41,6 +41,12 @@ class User(UserMixin, db.Model):
     interviewlikes = db.relationship('InterviewLikes', backref = 'user', lazy = 'dynamic')
     #Define the relationship with the InterviewDislikes model.
     interviewdislikes = db.relationship('InterviewDislikes', backref = 'user', lazy = 'dynamic')
+    #Define the relationship with the PromotionComments model.
+    promotion_comments = db.relationship('PromotionComments', backref='user', lazy='dynamic')
+    #Define the relationship with the PromotionLikes model.
+    promotionlikes = db.relationship('PromotionLikes', backref = 'user', lazy = 'dynamic')
+    #Define the relationship with the PromotionDislikes model.
+    promotiondislikes = db.relationship('PromotionDislikes', backref = 'user', lazy = 'dynamic')
 
     #Create a write only class property password
     @property
@@ -229,6 +235,12 @@ class Promotion(db.Model):
     postedDate = db.Column(db.DateTime,default=datetime.now)
     #Create Foreign key column where we store the id of the user who wrote the promotion pitch
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+    #Define the relationship with the  PromotionComments Model.
+    promotion_comments = db.relationship('PromotionComments',backref = 'promotioncomments',lazy = "dynamic")
+    #Define the relationship with the PromotionLikes model.
+    promotionlikes = db.relationship('PromotionLikes', backref = 'promotionlikes', lazy = 'dynamic')
+    #Define the relationship with the PromotionDislikes model.
+    promotiondislikes = db.relationship('PromotionDislikes', backref = 'promotiondislikes', lazy = 'dynamic')
 
     def save_promotion(self):
         db.session.add(self)
@@ -239,3 +251,57 @@ class Promotion(db.Model):
     def get_promotions(cls):
         promotions = Promotion.query.all()
         return promotions
+
+class  PromotionComments(db.Model):
+
+    __tablename__ = 'promotioncomments'
+
+    id = db.Column(db.Integer,primary_key = True)
+    comment = db.Column(db.String)
+    postedDate = db.Column(db.DateTime,default=datetime.now)
+    #Create Foreign key column where we store the id of the Promotion Pitch to be commented on
+    promotion_pitch_id = db.Column(db.Integer,db.ForeignKey("promotions.id"))
+    #Create Foreign key column where we store the id of the user that commented on the Promotion Pitch
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    
+    def save_promotionComment(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    @classmethod
+    def get_promotionComments(cls,id):
+        comments = PromotionComments.query.filter_by(promotion_pitch_id=id).all()
+        return comments
+
+class PromotionLikes(db.Model):
+    __tablename__ = 'promotionlikes'
+
+    id = db.Column(db.Integer,primary_key=True)
+    promotion_pitch_id = db.Column(db.Integer,db.ForeignKey("promotions.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+
+    def save_promotionlike(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    @classmethod
+    def get_promotionlikes(cls,id):
+        promotionlikes = PromotionLikes.query.filter_by(promotion_pitch_id=id).all()
+        return promotionlikes
+
+class PromotionDislikes(db.Model):
+    __tablename__ = 'promotiondislikes'
+
+    id = db.Column(db.Integer,primary_key=True)
+    promotion_pitch_id = db.Column(db.Integer,db.ForeignKey("promotions.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+
+    def save_promotiondislike(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    @classmethod
+    def get_promotiondislikes(cls,id):
+        promotiondislikes = PromotionDislikes.query.filter_by(promotion_pitch_id=id).all()
+        return promotiondislikes
+

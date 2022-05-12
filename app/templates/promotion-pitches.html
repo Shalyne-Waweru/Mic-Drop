@@ -28,16 +28,16 @@
               <p>Date: <strong>{{promotion_pitch.postedDate.strftime('%Y/%m/%d')}}</strong></p>
               <div class="votes">
                 <div class="upvote">
-                  <i class="fa fa-thumbs-up" id="like" aria-hidden="true"></i>
-                  <p class="like-num">0</p>
+                  <a href="{{url_for('main.promotion_upvotes',id = promotion_pitch.id)}}"><i class="fa fa-thumbs-up" id="like" aria-hidden="true"></i></a>
+                  <p>{{promotion_pitch.promotionlikes.count()}}</p>
                 </div>
                 <div class="downvote">
-                  <i class="fa fa-thumbs-down" id="dislike" aria-hidden="true"></i>
-                  <p class="dislike-num">0</p>
+                  <a href="{{url_for('main.promotion_downvotes',id = promotion_pitch.id)}}"><i class="fa fa-thumbs-down" id="dislike" aria-hidden="true"></i></a>
+                  <p>{{promotion_pitch.promotiondislikes.count()}}</p>
                 </div>
               </div>
               <div class="comment-btn">
-                <p><a href="{{ url_for('main.comments') }}">ADD COMMENT</a></p>
+                <p><a href="{{url_for('main.promotionComments',promotion_pitch_id = promotion_pitch.id)}}">ADD COMMENT</a></p>
               </div>
             </div>
           {% endfor %}

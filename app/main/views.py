@@ -1,7 +1,7 @@
 from flask import render_template,redirect,url_for
 import flask_login
 from . import main
-from ..models import Pickup,PickupComments,PickupLikes,PickupDislikes,Interview,InterviewComments,InterviewLikes,InterviewDislikes,Promotion
+from ..models import Pickup,PickupComments,PickupLikes,PickupDislikes,Interview,InterviewComments,InterviewLikes,InterviewDislikes,Promotion,PromotionComments,PromotionLikes,PromotionDislikes
 from .forms import PickupLineForm, InterviewForm, PromotionForm, CommentForm
 from flask_login import current_user, login_required
 
@@ -259,3 +259,86 @@ def promotion():
     promotion_pitches = Promotion.get_promotions()
 
     return render_template('promotion-pitches.html', promotion_form = promotion_form, promotion_pitches = promotion_pitches)
+
+#PROMOTION PITCHES COMMENTS PAGE
+@main.route('/promotioncomments/<int:promotion_pitch_id>', methods = ['GET','POST'])
+@login_required
+def promotionComments(promotion_pitch_id):
+    '''
+    View root page function that returns the promotion pitch comments page and its data
+    '''
+
+    promotion_pitch = Promotion.query.filter_by(id = promotion_pitch_id).first().promotion
+    print(promotion_pitch)
+    promotion_author = Promotion.query.filter_by(id = promotion_pitch_id).first().user.username
+    print(promotion_author)
+    promotion_postedDate = Promotion.query.filter_by(id = promotion_pitch_id).first().postedDate
+    print(promotion_postedDate)
+    promotion_likes = PromotionLikes.query.filter_by(promotion_pitch_id = promotion_pitch_id).count()
+    print(promotion_likes)
+    promotion_dislikes = PromotionDislikes.query.filter_by(promotion_pitch_id = promotion_pitch_id).count()
+    print(promotion_dislikes)
+
+    #Create an instance of the CommentForm class and name it comments_form
+    comments_form = CommentForm()
+
+    #The method returns True when the form is submitted and all the data has been verified by the validators
+    if comments_form.validate_on_submit():
+        #If True we gather the data from the form input fields
+        comment = comments_form.comment.data
+
+        #Create a new comment object and save it
+        new_comment = PromotionComments(comment=comment, user=current_user, promotion_pitch_id=promotion_pitch_id )
+        new_comment.save_promotionComment()
+
+        return redirect(url_for('main.promotionComments',promotion_pitch_id=promotion_pitch_id))
+
+    #Get all the Comments
+    all_comments = PromotionComments.get_promotionComments(promotion_pitch_id)
+
+    return render_template('promotion-comments.html', comments_form = comments_form, all_comments = all_comments, promotion_pitch_id = promotion_pitch_id, promotion_pitch = promotion_pitch, promotion_author = promotion_author, promotion_postedDate = promotion_postedDate, promotion_likes = promotion_likes, promotion_dislikes = promotion_dislikes)
+
+#PROMOTION PITCHES UPVOTES
+@main.route('/promotionlike/<int:id>', methods = ['GET', 'POST'])
+def promotion_upvotes(id):
+    promotion_upvotes = PromotionLikes.get_promotionlikes(id)
+
+    valid_string = f'{current_user.id}:{id}'
+
+    for promotion in promotion_upvotes:
+        to_str = f'{promotion}'
+
+        print(valid_string+" "+to_str)
+
+        if valid_string == to_str:
+            return redirect(url_for('main.promotion',id=id))
+        else:
+            continue
+
+    new_promotion_upvote = PromotionLikes(user = current_user, promotion_pitch_id=id)
+    new_promotion_upvote.save_promotionlike()
+
+    return redirect(url_for('main.promotion',id=id))
+
+#PROMOTION PITCHES DOWNVOTES
+@main.route('/promotiondislike/<int:id>', methods = ['GET', 'POST'])
+def promotion_downvotes(id):
+    promotion_downvotes = PromotionDislikes.get_promotiondislikes(id)
+
+    valid_string = f'{current_user.id}:{id}'
+
+    for promotion in promotion_downvotes:
+        to_str = f'{promotion}'
+
+        print(valid_string+" "+to_str)
+
+        if valid_string == to_str:
+            return redirect(url_for('main.promotion',id=id))
+        else:
+            continue
+
+    new_promotion_downvote = PromotionDislikes(user = current_user, promotion_pitch_id=id)
+    new_promotion_downvote.save_promotiondislike()
+
+    return redirect(url_for('main.promotion',id=id))
+
