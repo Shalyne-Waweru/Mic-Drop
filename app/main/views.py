@@ -1,7 +1,7 @@
 from flask import render_template,redirect,url_for
 import flask_login
 from . import main
-from ..models import Pickup,Interview,Promotion,Comments
+from ..models import Pickup,Interview,Promotion,Comments,PickupLikes,PickupDislikes
 from .forms import PickupLineForm, InterviewForm, PromotionForm, CommentForm
 from flask_login import current_user, login_required
 
@@ -112,7 +112,10 @@ def comments(pline_post_id):
     print(pline_author)
     pline_postedDate = Pickup.query.filter_by(id = pline_post_id).first().postedDate
     print(pline_postedDate)
-
+    pline_likes = PickupLikes.query.filter_by(pline_post_id = pline_post_id).count()
+    print(pline_likes)
+    pline_dislikes = PickupDislikes.query.filter_by(pline_post_id = pline_post_id).count()
+    print(pline_dislikes)
 
     #Create an instance of the CommentForm class and name it comments_form
     comments_form = CommentForm()
@@ -131,4 +134,49 @@ def comments(pline_post_id):
     #Get all the Comments
     all_comments = Comments.get_comments(pline_post_id)
 
-    return render_template('comments.html', comments_form = comments_form, all_comments = all_comments, pline_post_id = pline_post_id, pline = pline, pline_author = pline_author, pline_postedDate = pline_postedDate)
+    return render_template('comments.html', comments_form = comments_form, all_comments = all_comments, pline_post_id = pline_post_id, pline = pline, pline_author = pline_author, pline_postedDate = pline_postedDate, pline_likes = pline_likes, pline_dislikes = pline_dislikes)
+
+
+#PICKUP LINE UPVOTES
+@main.route('/like/<int:id>', methods = ['GET', 'POST'])
+def pline_upvotes(id):
+    pline_upvotes = PickupLikes.get_pickuplikes(id)
+
+    valid_string = f'{current_user.id}:{id}'
+
+    for pline in pline_upvotes:
+        to_str = f'{pline}'
+
+        print(valid_string+" "+to_str)
+
+        if valid_string == to_str:
+            return redirect(url_for('main.pickup',id=id))
+        else:
+            continue
+
+    new_pline_upvote = PickupLikes(user = current_user, pline_post_id=id)
+    new_pline_upvote.save_pickuplike()
+
+    return redirect(url_for('main.pickup',id=id))
+
+#PICKUP LINE DOWNVOTES
+@main.route('/dislike/<int:id>', methods = ['GET', 'POST'])
+def pline_downvotes(id):
+    pline_downvotes = PickupDislikes.get_pickupdislikes(id)
+
+    valid_string = f'{current_user.id}:{id}'
+
+    for pline in pline_downvotes:
+        to_str = f'{pline}'
+
+        print(valid_string+" "+to_str)
+
+        if valid_string == to_str:
+            return redirect(url_for('main.pickup',id=id))
+        else:
+            continue
+
+    new_pline_downvote = PickupDislikes(user = current_user, pline_post_id=id)
+    new_pline_downvote.save_pickupdislike()
+
+    return redirect(url_for('main.pickup',id=id))
