@@ -5,8 +5,8 @@ from ..models import User
 from wtforms import ValidationError
 
 class RegistrationForm(FlaskForm):
-    emails = StringField('Enter Email Address',validators=[DataRequired(),Email()])
-    usernames = StringField('Enter Username',validators = [DataRequired()])
+    email = StringField('Enter Email Address',validators=[DataRequired(),Email()])
+    username = StringField('Enter Username',validators = [DataRequired()])
     password = PasswordField('Enter Password',validators = [DataRequired(), EqualTo('confirm_password',message = 'Passwords must match')])
     confirm_password = PasswordField('Confirm Password',validators = [DataRequired()])
     style={ 'style': 'background-color: black; color: white; width:430px; margin-top: 20px; '}
@@ -14,15 +14,15 @@ class RegistrationForm(FlaskForm):
 
     #Custom validators
     def validate_email(self,data_field):
-            if User.query.filter_by(emails =data_field.data).first():
+            if User.query.filter_by(email =data_field.data).first():
                 raise ValidationError('There is an account with that email')
 
     def validate_username(self,data_field):
-        if User.query.filter_by(usernames = data_field.data).first():
+        if User.query.filter_by(username = data_field.data).first():
             raise ValidationError('That username is taken')
 
 class LoginForm(FlaskForm):
-    emails = StringField('Email Address',validators=[DataRequired(),Email()])
+    email = StringField('Email Address',validators=[DataRequired(),Email()])
     password = PasswordField('Password',validators =[DataRequired()])
 
     checkbox_style={ 'style': 'width:15px; height:15px;'}

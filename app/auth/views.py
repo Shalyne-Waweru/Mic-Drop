@@ -14,7 +14,7 @@ def login():
 
     if login_form.validate_on_submit():
         #Search for a user from our database with the email we receive from the form
-        user = User.query.filter_by(emails = login_form.emails.data).first()
+        user = User.query.filter_by(email = login_form.email.data).first()
 
         #Confirm that the password entered matches with the password hash stored in the database.
         if user is not None and user.verify_password(login_form.password.data):
@@ -35,14 +35,14 @@ def register():
 
     if signup_form.validate_on_submit():
         #Create a new user from the User model and pass in the email,username and password.
-        user = User(emails = signup_form.emails.data, usernames = signup_form.usernames.data,password = signup_form.password.data)
+        user = User(email = signup_form.email.data, username = signup_form.username.data,password = signup_form.password.data)
         #Add the new user to the session
         db.session.add(user)
         #Commit the session to add the user to our database.
         db.session.commit()
 
         #We pass in the EMAIL SUBJECT, the TEMPLATE FILE where our message body will be stored and the NEW USER'S EMAIL which we get from the registration form and USER as a keyword argument.
-        mail_message("WELCOME TO MIC DROP","email/welcome",user.emails,user=user)
+        mail_message("WELCOME TO MIC DROP","email/welcome",user.email,user=user)
 
         return redirect(url_for('auth.login'))
 

@@ -8,7 +8,7 @@ from datetime import datetime
 # 3. is_anonymous()- Returns a boolean if a user is anonymous.
 # 4. get_id()- Returns a unique identifier for User.
 
-from flask_login import UserMixin, current_user
+from flask_login import UserMixin
 from . import login_manager
 
 #Callback function that retrieves a user when a unique identifier is passed.
@@ -19,9 +19,9 @@ def load_user(user_id):
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer,primary_key = True)
-    emails = db.Column(db.String(255),unique = True,index = True)
-    usernames = db.Column(db.String(255),unique = True,index = True)
-    password_hashes = db.Column(db.String(255))
+    email = db.Column(db.String(255),unique = True,index = True)
+    username = db.Column(db.String(255),unique = True,index = True)
+    password_hash = db.Column(db.String(255))
 
     #Define the relationship with the Pickup model.
     pickupLines = db.relationship('Pickup',backref = 'user',lazy = "dynamic")
@@ -30,7 +30,7 @@ class User(UserMixin, db.Model):
     #Define the relationship with the Promotion model.
     promotions = db.relationship('Promotion',backref = 'user',lazy = "dynamic")
     #Define the relationship with the Comments model.
-    comments = db.relationship('Comments', backref='user', lazy='dynamic')
+    comments = db.relationship('PickupComments', backref='user', lazy='dynamic')
     #Define the relationship with the PickupLikes model.
     pickuplikes = db.relationship('PickupLikes', backref = 'user', lazy = 'dynamic')
     #Define the relationship with the PickupDislikes model.
@@ -42,15 +42,15 @@ class User(UserMixin, db.Model):
         #Block access to the password property
         raise AttributeError('You cannot read the password attribute')
 
-    #Generate a password hash and pass it to the password_hashes column property to save to the database.
+    #Generate a password hash and pass it to the password_hash column property to save to the database.
     @password.setter
     def password(self, password):
-        self.password_hashes = generate_password_hash(password)
+        self.password_hash = generate_password_hash(password)
 
     #Create a method verify_password that takes in a password
     #It hashes it and compares it to the hashed password to check if they are the same.
     def verify_password(self,password):
-        return check_password_hash(self.password_hashes,password)
+        return check_password_hash(self.password_hash,password)
 
     #Functions to append the pitches to their respective relationship columns
     def addPickupLine(self,pickupLine):
@@ -69,8 +69,9 @@ class User(UserMixin, db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return f'User {self.usernames}'
+        return f'User {self.username}'
 
+#PICKUP LINES
 class Pickup(db.Model):
 
     __tablename__ = 'pickuplines'
@@ -81,7 +82,7 @@ class Pickup(db.Model):
     #Create Foreign key column where we store the id of the user who wrote the pickup line
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
     #Define the relationship with the Comments Model.
-    pline_comments = db.relationship('Comments',backref = 'plinecomments',lazy = "dynamic")
+    pline_comments = db.relationship('PickupComments',backref = 'plinecomments',lazy = "dynamic")
     #Define the relationship with the PickupLikes model.
     pickuplikes = db.relationship('PickupLikes', backref = 'plinelikes', lazy = 'dynamic')
     #Define the relationship with the PickupDislikes model.
@@ -96,6 +97,59 @@ class Pickup(db.Model):
     def get_pickup_lines(cls):
         pickupLines = Pickup.query.all()
         return pickupLines
+
+class  PickupComments(db.Model):
+
+    __tablename__ = 'pickupcomments'
+
+    id = db.Column(db.Integer,primary_key = True)
+    comment = db.Column(db.String)
+    postedDate = db.Column(db.DateTime,default=datetime.now)
+    #Create Foreign key column where we store the id of the Pickup Line to be commented on
+    pickup_id = db.Column(db.Integer,db.ForeignKey("pickuplines.id"))
+    #Create Foreign key column where we store the id of the user that commented on the Pickup Line
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    
+    def save_comment(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    @classmethod
+    def get_comments(cls,id):
+        comments = PickupComments.query.filter_by(pickup_id=id).all()
+        return comments
+
+class PickupLikes(db.Model):
+    __tablename__ = 'pickuplikes'
+
+    id = db.Column(db.Integer,primary_key=True)
+    pickup_id = db.Column(db.Integer,db.ForeignKey("pickuplines.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+
+    def save_pickuplike(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    @classmethod
+    def get_pickuplikes(cls,id):
+        plinelikes = PickupLikes.query.filter_by(pickup_id=id).all()
+        return plinelikes
+
+class PickupDislikes(db.Model):
+    __tablename__ = 'pickupdislikes'
+
+    id = db.Column(db.Integer,primary_key=True)
+    pickup_id = db.Column(db.Integer,db.ForeignKey("pickuplines.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+
+    def save_pickupdislike(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    @classmethod
+    def get_pickupdislikes(cls,id):
+        plinedislikes = PickupDislikes.query.filter_by(pickup_id=id).all()
+        return plinedislikes
 
 class Interview(db.Model):
 
@@ -136,57 +190,3 @@ class Promotion(db.Model):
     def get_promotions(cls):
         promotions = Promotion.query.all()
         return promotions
-
-class Comments(db.Model):
-
-    __tablename__ = 'comments'
-
-    id = db.Column(db.Integer,primary_key = True)
-    comment = db.Column(db.String)
-    postedDate = db.Column(db.DateTime,default=datetime.now)
-    #Create Foreign key column where we store the id of the Pickup Line to be commented on
-    pline_post_id = db.Column(db.Integer,db.ForeignKey("pickuplines.id"))
-    #Create Foreign key column where we store the id of the user that commented on the Pickup Line
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    
-    def save_comment(self):
-        db.session.add(self)
-        db.session.commit()
-    
-    @classmethod
-    def get_comments(cls,id):
-        comments = Comments.query.filter_by(pline_post_id=id).all()
-        return comments
-
-class PickupLikes(db.Model):
-    __tablename__ = 'pickuplikes'
-
-    id = db.Column(db.Integer,primary_key=True)
-    pline_post_id = db.Column(db.Integer,db.ForeignKey("pickuplines.id"))
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-
-    def save_pickuplike(self):
-        db.session.add(self)
-        db.session.commit()
-    
-    @classmethod
-    def get_pickuplikes(cls,id):
-        plinelikes = PickupLikes.query.filter_by(pline_post_id=id).all()
-        return plinelikes
-
-class PickupDislikes(db.Model):
-    __tablename__ = 'pickupdislikes'
-
-    id = db.Column(db.Integer,primary_key=True)
-    pline_post_id = db.Column(db.Integer,db.ForeignKey("pickuplines.id"))
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-
-    def save_pickupdislike(self):
-        db.session.add(self)
-        db.session.commit()
-    
-    @classmethod
-    def get_pickupdislikes(cls,id):
-        plinedislikes = PickupDislikes.query.filter_by(pline_post_id=id).all()
-        return plinedislikes
-

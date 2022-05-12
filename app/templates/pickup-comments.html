@@ -63,7 +63,7 @@
           {% if all_comments %}
             {% for com in all_comments %}
               <div class="col-md-5">
-                <h5>Comment From: {{com.user.usernames}}</h5>
+                <h5>Comment From: {{com.user.username}}</h5>
                 <p><strong>Comment:</strong> {{com.comment}}</p>  
                 <hr>
                 <h6><strong>Published Date:</strong> {{com.postedDate.strftime('%Y/%m/%d')}}</h6>
