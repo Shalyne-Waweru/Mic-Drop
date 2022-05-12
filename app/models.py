@@ -35,6 +35,12 @@ class User(UserMixin, db.Model):
     pickuplikes = db.relationship('PickupLikes', backref = 'user', lazy = 'dynamic')
     #Define the relationship with the PickupDislikes model.
     pickupdislikes = db.relationship('PickupDislikes', backref = 'user', lazy = 'dynamic')
+    #Define the relationship with the InterviewComments model.
+    interview_comments = db.relationship('InterviewComments', backref='user', lazy='dynamic')
+    #Define the relationship with the InterviewLikes model.
+    interviewlikes = db.relationship('InterviewLikes', backref = 'user', lazy = 'dynamic')
+    #Define the relationship with the InterviewDislikes model.
+    interviewdislikes = db.relationship('InterviewDislikes', backref = 'user', lazy = 'dynamic')
 
     #Create a write only class property password
     @property
@@ -51,22 +57,6 @@ class User(UserMixin, db.Model):
     #It hashes it and compares it to the hashed password to check if they are the same.
     def verify_password(self,password):
         return check_password_hash(self.password_hash,password)
-
-    #Functions to append the pitches to their respective relationship columns
-    def addPickupLine(self,pickupLine):
-        self.pickupLines.append(pickupLine)
-        db.session.add(self)
-        db.session.commit()
-
-    def addInterview(self,interviewPitch):
-        self.interviews.append(interviewPitch)
-        db.session.add(self)
-        db.session.commit()
-
-    def addPromotion(self,promotionPitch):
-        self.promotions.append(promotionPitch)
-        db.session.add(self)
-        db.session.commit()
 
     def __repr__(self):
         return f'User {self.username}'
@@ -87,7 +77,7 @@ class Pickup(db.Model):
     pickuplikes = db.relationship('PickupLikes', backref = 'plinelikes', lazy = 'dynamic')
     #Define the relationship with the PickupDislikes model.
     pickupdislikes = db.relationship('PickupDislikes', backref = 'pickupdislikes', lazy = 'dynamic')
-
+    
     def save_pickup_line(self):
         db.session.add(self)
         db.session.commit()
@@ -160,6 +150,12 @@ class Interview(db.Model):
     postedDate = db.Column(db.DateTime,default=datetime.now)
     #Create Foreign key column where we store the id of the user who wrote the interview pitch
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+    #Define the relationship with the  InterviewComments Model.
+    interview_comments = db.relationship('InterviewComments',backref = 'interviewcomments',lazy = "dynamic")
+    #Define the relationship with the InterviewLikes model.
+    interviewlikes = db.relationship('InterviewLikes', backref = 'interviewlikes', lazy = 'dynamic')
+    #Define the relationship with the InterviewDislikes model.
+    interviewdislikes = db.relationship('InterviewDislikes', backref = 'interviewdislikes', lazy = 'dynamic')
 
     def save_interview(self):
         db.session.add(self)
@@ -170,6 +166,59 @@ class Interview(db.Model):
     def get_interviews(cls):
         interviews = Interview.query.all()
         return interviews
+
+class  InterviewComments(db.Model):
+
+    __tablename__ = 'interviewcomments'
+
+    id = db.Column(db.Integer,primary_key = True)
+    comment = db.Column(db.String)
+    postedDate = db.Column(db.DateTime,default=datetime.now)
+    #Create Foreign key column where we store the id of the Interview Pitch to be commented on
+    interview_pitch_id = db.Column(db.Integer,db.ForeignKey("interviews.id"))
+    #Create Foreign key column where we store the id of the user that commented on the Interview Pitch
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    
+    def save_interviewComment(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    @classmethod
+    def get_interviewComments(cls,id):
+        comments = InterviewComments.query.filter_by(interview_pitch_id=id).all()
+        return comments
+
+class InterviewLikes(db.Model):
+    __tablename__ = 'interviewlikes'
+
+    id = db.Column(db.Integer,primary_key=True)
+    interview_pitch_id = db.Column(db.Integer,db.ForeignKey("interviews.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+
+    def save_interviewlike(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    @classmethod
+    def get_interviewlikes(cls,id):
+        interviewlikes = InterviewLikes.query.filter_by(interview_pitch_id=id).all()
+        return interviewlikes
+
+class InterviewDislikes(db.Model):
+    __tablename__ = 'interviewdislikes'
+
+    id = db.Column(db.Integer,primary_key=True)
+    interview_pitch_id = db.Column(db.Integer,db.ForeignKey("interviews.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+
+    def save_interviewdislike(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    @classmethod
+    def get_interviewdislikes(cls,id):
+        interviewdislikes = InterviewDislikes.query.filter_by(interview_pitch_id=id).all()
+        return interviewdislikes
 
 class Promotion(db.Model):
 

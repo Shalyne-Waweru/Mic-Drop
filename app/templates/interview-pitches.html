@@ -28,16 +28,16 @@
               <p>Date: <strong>{{interview_pitch.postedDate.strftime('%Y/%m/%d')}}</strong></p>
               <div class="votes">
                 <div class="upvote">
-                  <i class="fa fa-thumbs-up" id="like" aria-hidden="true"></i>
-                  <p class="like-num">0</p>
+                  <a href="{{url_for('main.interview_upvotes',id = interview_pitch.id)}}"><i class="fa fa-thumbs-up" id="like" aria-hidden="true"></i></a>
+                  <p>{{interview_pitch.interviewlikes.count()}}</p>
                 </div>
                 <div class="downvote">
-                  <i class="fa fa-thumbs-down" id="dislike" aria-hidden="true"></i>
-                  <p class="dislike-num">0</p>
+                  <a href="{{url_for('main.interview_downvotes',id = interview_pitch.id)}}"><i class="fa fa-thumbs-down" id="dislike" aria-hidden="true"></i></a>
+                  <p>{{interview_pitch.interviewdislikes.count()}}</p>
                 </div>
               </div>
               <div class="comment-btn">
-                <p><a href="{{ url_for('main.comments') }}">ADD COMMENT</a></p>
+                <p><a href="{{url_for('main.interviewComments',interview_pitch_id = interview_pitch.id)}}">ADD COMMENT</a></p>
               </div>
             </div>
           {% endfor %}

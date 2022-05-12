@@ -1,7 +1,7 @@
 from flask import render_template,redirect,url_for
 import flask_login
 from . import main
-from ..models import Pickup,Interview,Promotion,PickupComments,PickupLikes,PickupDislikes
+from ..models import Pickup,PickupComments,PickupLikes,PickupDislikes,Interview,InterviewComments,InterviewLikes,InterviewDislikes,Promotion
 from .forms import PickupLineForm, InterviewForm, PromotionForm, CommentForm
 from flask_login import current_user, login_required
 
@@ -31,9 +31,8 @@ def pickup():
         pickupLine = pickup_line_form.pickupLine.data
 
         #Create a new pickup_line object and save it
-        new_pickup_line = Pickup(pickupLine = pickupLine)
+        new_pickup_line = Pickup(pickupLine = pickupLine, user=current_user)
         new_pickup_line.save_pickup_line()
-        flask_login.current_user.addPickupLine(new_pickup_line)
 
         return redirect(url_for('main.pickup'))
 
@@ -142,9 +141,8 @@ def interview():
         interview = interview_form.interview.data
 
         #Create a new interview object and save it
-        new_interview = Interview(interview = interview)
+        new_interview = Interview(interview = interview, user=current_user)
         new_interview.save_interview()
-        flask_login.current_user.addInterview(new_interview)
 
         return redirect(url_for('main.interview'))
 
@@ -152,6 +150,88 @@ def interview():
     interview_pitches = Interview.get_interviews()
 
     return render_template('interview-pitches.html', interview_form = interview_form, interview_pitches = interview_pitches)
+
+#INTERVIEW PITCHES COMMENTS PAGE
+@main.route('/interviewcomments/<int:interview_pitch_id>', methods = ['GET','POST'])
+@login_required
+def interviewComments(interview_pitch_id):
+    '''
+    View root page function that returns the interview pitch comments page and its data
+    '''
+
+    interview_pitch = Interview.query.filter_by(id = interview_pitch_id).first().interview
+    print(interview_pitch)
+    interview_author = Interview.query.filter_by(id = interview_pitch_id).first().user.username
+    print(interview_author)
+    interview_postedDate = Interview.query.filter_by(id = interview_pitch_id).first().postedDate
+    print(interview_postedDate)
+    interview_likes = InterviewLikes.query.filter_by(interview_pitch_id = interview_pitch_id).count()
+    print(interview_likes)
+    interview_dislikes = InterviewDislikes.query.filter_by(interview_pitch_id = interview_pitch_id).count()
+    print(interview_dislikes)
+
+    #Create an instance of the CommentForm class and name it comments_form
+    comments_form = CommentForm()
+
+    #The method returns True when the form is submitted and all the data has been verified by the validators
+    if comments_form.validate_on_submit():
+        #If True we gather the data from the form input fields
+        comment = comments_form.comment.data
+
+        #Create a new comment object and save it
+        new_comment = InterviewComments(comment=comment, user=current_user, interview_pitch_id=interview_pitch_id )
+        new_comment.save_interviewComment()
+
+        return redirect(url_for('main.interviewComments',interview_pitch_id=interview_pitch_id))
+
+    #Get all the Comments
+    all_comments = InterviewComments.get_interviewComments(interview_pitch_id)
+
+    return render_template('interview-comments.html', comments_form = comments_form, all_comments = all_comments, interview_pitch_id = interview_pitch_id, interview_pitch = interview_pitch, interview_author = interview_author, interview_postedDate = interview_postedDate, interview_likes = interview_likes, interview_dislikes = interview_dislikes)
+
+#INTERVIEW PITCHES UPVOTES
+@main.route('/interviewlike/<int:id>', methods = ['GET', 'POST'])
+def interview_upvotes(id):
+    interview_upvotes = InterviewLikes.get_interviewlikes(id)
+
+    valid_string = f'{current_user.id}:{id}'
+
+    for interview in interview_upvotes:
+        to_str = f'{interview}'
+
+        print(valid_string+" "+to_str)
+
+        if valid_string == to_str:
+            return redirect(url_for('main.interview',id=id))
+        else:
+            continue
+
+    new_interview_upvote = InterviewLikes(user = current_user, interview_pitch_id=id)
+    new_interview_upvote.save_interviewlike()
+
+    return redirect(url_for('main.interview',id=id))
+
+#INTERVIEW PITCHES DOWNVOTES
+@main.route('/interviewdislike/<int:id>', methods = ['GET', 'POST'])
+def interview_downvotes(id):
+    interview_downvotes = InterviewDislikes.get_interviewdislikes(id)
+
+    valid_string = f'{current_user.id}:{id}'
+
+    for interview in interview_downvotes:
+        to_str = f'{interview}'
+
+        print(valid_string+" "+to_str)
+
+        if valid_string == to_str:
+            return redirect(url_for('main.interview',id=id))
+        else:
+            continue
+
+    new_interview_downvote = InterviewDislikes(user = current_user, interview_pitch_id=id)
+    new_interview_downvote.save_interviewdislike()
+
+    return redirect(url_for('main.interview',id=id))
 
 # PROMOTION PITCHES PAGE
 @main.route('/promotion', methods = ['GET','POST'])
@@ -170,9 +250,8 @@ def promotion():
         promotion = promotion_form.promotion.data
 
         #Create a new promotion object and save it
-        new_promotion = Promotion(promotion = promotion)
+        new_promotion = Promotion(promotion = promotion, user=current_user)
         new_promotion.save_promotion()
-        flask_login.current_user.addPromotion(new_promotion)
 
         return redirect(url_for('main.promotion'))
 
