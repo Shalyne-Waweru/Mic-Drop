@@ -37,7 +37,7 @@
                 </div>
               </div>
               <div class="comment-btn">
-                <p><a href="{{ url_for('main.comments') }}">ADD COMMENT</a></p>
+                <p><a href="{{url_for('main.comments',pline_post_id = line.id)}}">ADD COMMENT</a></p>
               </div>
             </div>
           {% endfor %}

@@ -29,9 +29,8 @@ class User(UserMixin, db.Model):
     interviews = db.relationship('Interview',backref = 'user',lazy = "dynamic")
     #Define the relationship with the Promotion model.
     promotions = db.relationship('Promotion',backref = 'user',lazy = "dynamic")
-
-    # #Define the relationship with the Comments model.
-    # comments = db.relationship('Comments', backref='user', lazy='dynamic')
+    #Define the relationship with the Comments model.
+    comments = db.relationship('Comments', backref='user', lazy='dynamic')
 
     #Create a write only class property password
     @property
@@ -77,8 +76,8 @@ class Pickup(db.Model):
     postedDate = db.Column(db.DateTime,default=datetime.now)
     #Create Foreign key column where we store the id of the user who wrote the pickup line
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
-    # #Define the relationship with the Comments Model.
-    # pline_comments = db.relationship('Comments',backref = 'plinecomments',lazy = "dynamic")
+    #Define the relationship with the Comments Model.
+    pline_comments = db.relationship('Comments',backref = 'plinecomments',lazy = "dynamic")
 
     def save_pickup_line(self):
         db.session.add(self)
@@ -130,48 +129,23 @@ class Promotion(db.Model):
         promotions = Promotion.query.all()
         return promotions
 
-class Comments():
+class Comments(db.Model):
 
-    # __tablename__ = 'comments'
+    __tablename__ = 'comments'
 
-    # id = db.Column(db.Integer,primary_key = True)
-    # comment = db.Column(db.String)
-    # postedDate = db.Column(db.DateTime,default=datetime.now)
-    # #Create Foreign key column where we store the id of the Pickup Line to be commented on
-    # pline_post_id = db.Column(db.Integer,db.ForeignKey("pickuplines.id"))
-    # #Create Foreign key column where we store the id of the user that commented on the Pickup Line
-    # user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    id = db.Column(db.Integer,primary_key = True)
+    comment = db.Column(db.String)
+    postedDate = db.Column(db.DateTime,default=datetime.now)
+    #Create Foreign key column where we store the id of the Pickup Line to be commented on
+    pline_post_id = db.Column(db.Integer,db.ForeignKey("pickuplines.id"))
+    #Create Foreign key column where we store the id of the user that commented on the Pickup Line
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     
-    # def save_comment(self):
-    #     db.session.add(self)
-    #     db.session.commit()
-
-    # @classmethod
-    # def get_comments(cls,id):
-    #     comments = Comments.query.filter_by(pline_post_id=id).all()
-    #     return comments
-
-    all_comments = []
-
-    def __init__(self,comment):
-        self.comment = comment
-
-    #Appends the comment object to a class variable all_comments that is an empty list. 
     def save_comment(self):
-        Comments.all_comments.append(self)
-
-    #Clears all the Items from the list
+        db.session.add(self)
+        db.session.commit()
+    
     @classmethod
-    def clear_comments(cls):
-        Comments.all_comments.clear()
-
-    #Get all the Comments
-    @classmethod
-    def get_comments(cls):
-
-        response = []
-
-        for comment in cls.all_comments:
-                response.append(comment)
-
-        return response
+    def get_comments(cls,id):
+        comments = Comments.query.filter_by(pline_post_id=id).all()
+        return comments

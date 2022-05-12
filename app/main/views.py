@@ -98,10 +98,21 @@ def promotion():
 
     return render_template('promotion-pitches.html', promotion_form = promotion_form, promotion_pitches = promotion_pitches)
 
-# COMMENTS PAGE
-@main.route('/comments', methods = ['GET','POST'])
+#COMMENTS PAGE
+@main.route('/comments/<int:pline_post_id>', methods = ['GET','POST'])
 @login_required
-def comments():
+def comments(pline_post_id):
+    '''
+    View root page function that returns the comments page and its data
+    '''
+
+    pline = Pickup.query.filter_by(id = pline_post_id).first().pickupLine
+    print(pline)
+    pline_author = Pickup.query.filter_by(id = pline_post_id).first().user.usernames
+    print(pline_author)
+    pline_postedDate = Pickup.query.filter_by(id = pline_post_id).first().postedDate
+    print(pline_postedDate)
+
 
     #Create an instance of the CommentForm class and name it comments_form
     comments_form = CommentForm()
@@ -112,12 +123,12 @@ def comments():
         comment = comments_form.comment.data
 
         #Create a new comment object and save it
-        new_comment = Comments(comment)
+        new_comment = Comments(comment=comment, user=current_user, pline_post_id=pline_post_id )
         new_comment.save_comment()
 
-        return redirect(url_for('main.comments'))
+        return redirect(url_for('main.comments',pline_post_id=pline_post_id))
 
     #Get all the Comments
-    all_comments = Comments.get_comments()
+    all_comments = Comments.get_comments(pline_post_id)
 
-    return render_template('comments.html', comments_form = comments_form, all_comments = all_comments)
+    return render_template('comments.html', comments_form = comments_form, all_comments = all_comments, pline_post_id = pline_post_id, pline = pline, pline_author = pline_author, pline_postedDate = pline_postedDate)

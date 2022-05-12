@@ -465,7 +465,7 @@ body {
 }
 
 .comment-btn p {
-  width: 341px;
+  width: 310px;
   margin-top: 20px;
   background-color: white;
   padding: 15px;
@@ -597,4 +597,5 @@ body {
 .comments-default {
   color: black;
   font-weight: bold;
+  margin-bottom: 50px;
 }

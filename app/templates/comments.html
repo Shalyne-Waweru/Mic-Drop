@@ -10,7 +10,7 @@
 
     <div class="section-header">
       <hr class="horizontal">
-      <h2>All Comments</h2>
+      <h2>Add Comments</h2>
       <hr class="horizontal">
     </div>
   </div>
@@ -20,13 +20,10 @@
     <div class="container">
       <div class="row">
         <div class="col-md-3 left">
-          <p class="p-line">Lorem ipsum dolor sit amet. 33 
-            impedit dolorem aut enim molestiae
-              et sint nobis est sunt quis id ipsum 
-            fugit. Ut quibusdam quae!</p>
+          <p class="p-line">{{pline}}</p>
           <hr>
-          <h4>Author</h4>
-          <p>Date: <strong>8/4/2022</strong></p>
+          <h4>{{pline_author}}</h4>
+          <p>Date: <strong>{{pline_postedDate.strftime('%Y/%m/%d')}}</strong></p>
           <div class="votes">
             <div class="upvote">
               <i class="fa fa-thumbs-up" aria-hidden="true"></i>
@@ -66,14 +63,15 @@
           {% if all_comments %}
             {% for com in all_comments %}
               <div class="col-md-5">
-                <h5>Comment From: </h5>
+                <h5>Comment From: {{com.user.usernames}}</h5>
                 <p><strong>Comment:</strong> {{com.comment}}</p>  
                 <hr>
-                <h6><strong>Published Date:</strong> 8/4/2022</h6>
+                <h6><strong>Published Date:</strong> {{com.postedDate.strftime('%Y/%m/%d')}}</h6>
               </div>
             {% endfor %}
 
           {% else %}
+
             <h3 class="comments-default">There are No Comments Yet</h3>
     
           {% endif %}
