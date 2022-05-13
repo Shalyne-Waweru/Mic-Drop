@@ -23,6 +23,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(255),unique = True,index = True)
     password_hash = db.Column(db.String(255))
 
+
     #Define the relationship with the Pickup model.
     pickupLines = db.relationship('Pickup',backref = 'user',lazy = "dynamic")
     #Define the relationship with the Interview model.
